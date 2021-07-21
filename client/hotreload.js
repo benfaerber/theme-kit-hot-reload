@@ -1,7 +1,9 @@
 (() => {
-  const STORE_NAME = 'trueleafmarket';
+  // Stores to hot reload
+  const STORE_NAMES = ['trueleafmarket', 'sustainableseedco'];
 
-  if (!location.href.includes(STORE_NAME + '.')) return;
+  const url = location.href;
+  if (!STORE_NAMES.some((u) => url.includes(u))) return;
 
   const base = 'http://localhost/themekitHotReload/';
 
