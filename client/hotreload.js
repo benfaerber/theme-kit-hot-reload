@@ -7,6 +7,7 @@
 // @icon     https://cdn.shopify.com/static/shopify-favicon.png
 // @description Hot Reload for Shopify Theme Kit
 // ==/UserScript==
+
 let isRunning = false;
 
 (() => {
@@ -35,9 +36,13 @@ let isRunning = false;
   const createBanner = () => {
     const elem = document.createElement('div');
     const d = new Date();
-    const stamp = d.toLocaleTimeString();
-    elem.innerHTML = `${stamp}: Reloading in 5 seconds...`;
+    const stamp = `${d.getHours().toString()}:${d.getMinutes().toString()}:${d.getSeconds().toString()}`;
+    elem.innerHTML = `${stamp} - Reloading in 5 seconds...`;
     elem.style = `
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 9999;
     background-color: #424242;
     color: white;
     padding: 5px;
