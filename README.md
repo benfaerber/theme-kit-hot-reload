@@ -18,6 +18,8 @@ The file can also be embedded into your Theme's source code.
 
 Use whichever server you feel comfortable with. The Flask and Express servers are portable so if you have never worked with servers before I would recommend one of those.
 
+#
+
 ### PHP
 
 1. Add a new folder named 'themekitHotReload' to your 'htdocs' folder
@@ -64,13 +66,9 @@ Use whichever server you feel comfortable with. The Flask and Express servers ar
 
 1. Add the notify property to themekit's `config.yml` file
 
-<p class="codeblock-label">Express of flask</p>
+Express or Flask: `notify: http://localhost:7438/notify`
 
-`notify: http://localhost:7438/notify`
-
-<p class="codeblock-label">PHP</p>
-
-`notify: http://localhost/themekitHotReload/notify.php`
+PHP: `notify: http://localhost/themekitHotReload/notify.php`
 
 <p class="codeblock-label">Example config.yml:</p>
 
