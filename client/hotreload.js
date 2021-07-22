@@ -7,7 +7,6 @@
 // @icon     https://cdn.shopify.com/static/shopify-favicon.png
 // @description Hot Reload for Shopify Theme Kit
 // ==/UserScript==
-
 let isRunning = false;
 
 (() => {
@@ -33,6 +32,20 @@ let isRunning = false;
     return now;
   };
 
+  const createBanner = () => {
+    const elem = document.createElement('div');
+    const d = new Date();
+    const stamp = d.toLocaleTimeString();
+    elem.innerHTML = `${stamp}: Reloading in 5 seconds...`;
+    elem.style = `
+    background-color: #424242;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    `;
+    document.body.prepend(elem);
+  }
+
   const lastReloaded = getEpoch();
 
   let isReloading = false;
@@ -45,10 +58,10 @@ let isRunning = false;
     const lastUpdated = parseInt(text);
 
     if (lastUpdated > lastReloaded) {
+      createBanner();
       clearInterval(inter);
       isReloading = true;
-      console.log(prefix + 'Reloading in 5 seconds...');
-      await fetch(base + 'notify.php').catch(() => console.log(prefix + 'Connection to the Hot Reload server failed!'));;
+      fetch(base + 'notify.php').catch(() => console.log(prefix + 'Connection to the Hot Reload server failed!'));;
       setTimeout(() => {
         console.clear();
         location.reload();
