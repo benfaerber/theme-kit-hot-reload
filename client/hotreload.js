@@ -7,7 +7,6 @@
 // @icon     https://cdn.shopify.com/static/shopify-favicon.png
 // @description Hot Reload for Shopify Theme Kit
 // ==/UserScript==
-
 let isRunning = false;
 
 (() => {
@@ -34,21 +33,40 @@ let isRunning = false;
   };
 
   const createBanner = () => {
-    const elem = document.createElement('div');
     const d = new Date();
-    const stamp = `${d.getHours().toString()}:${d.getMinutes().toString()}:${d.getSeconds().toString()}`;
-    elem.innerHTML = `${stamp} - Reloading in 5 seconds...`;
-    elem.style = `
-    position: fixed;
-    top: 0px;
-    width: 100%;
-    z-index: 9999;
-    background-color: #424242;
-    color: white;
-    padding: 5px;
-    text-align: center;
+    const stamp = [d.getHours(), d.getMinutes(), d.getSeconds()].map(d => {
+      d = d.toString();
+      return d.length === 1 ? '0' + d : d;
+    }).join(':');
+
+    const elem = document.createElement('div');
+    elem.className = 'reloadBanner';
+    elem.innerHTML = /*html*/`${stamp} => Reloading in <span class="reloadNumber">5</span> seconds`;
+
+    const css = /*css*/`
+      .reloadBanner {
+        position: fixed;
+        top: 0px;
+        width: 100%;
+        z-index: 9999;
+        background-color: #eeeeee;
+        color: black;
+        padding: 5px;
+        text-align: center;
+        font-family: "fira code", monospace;
+      }
     `;
+
+    const style = document.createElement('style');
+    style.innerHTML = css;
+    document.head.appendChild(style);
     document.body.prepend(elem);
+
+    let secs = 5;
+    setInterval(() => {
+      secs--;
+      document.querySelector('.reloadNumber').innerHTML = secs.toString();
+    }, 1000);
   }
 
   const lastReloaded = getEpoch();
