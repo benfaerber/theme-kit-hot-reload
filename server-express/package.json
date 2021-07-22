@@ -1,0 +1,15 @@
+{
+  "name": "themekit-hot-reload-server",
+  "version": "1.0.0",
+  "description": "A server that handles hot reloading for Shopify Theme Kit",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
