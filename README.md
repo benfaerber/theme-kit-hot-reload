@@ -22,7 +22,7 @@ Use whichever server you feel comfortable with. The Flask and Express servers ar
 
 ### PHP
 
-1. Add a new folder named '`themekitHotReload`' to your '`htdocs`' folder
+1. Add a new folder named `themekitHotReload` to your `htdocs` folder
 2. Add the files from the `server-php` ([link](https://github.com/benfaerber/themekitHotReload/tree/main/server-php)) folder to the newly created folder
 3. Navigate to [http://localhost/themekitHotReload](http://localhost/themekitHotReload) to ensure the server is working
 
