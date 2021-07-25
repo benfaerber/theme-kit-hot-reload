@@ -7,14 +7,16 @@
 // @icon     https://cdn.shopify.com/static/shopify-favicon.png
 // @description Hot Reload for Shopify Theme Kit
 // ==/UserScript==
-let isRunning = false;
+let _isHotReloadRunning = false;
 
 (() => {
+  const IS_PHP = true;
+
   const STORE_NAMES = [];
 
   const prefix = 'Theme Kit Hot Reload: ';
-  if (isRunning) return;
-  isRunning = true;
+  if (_isHotReloadRunning) return;
+  _isHotReloadRunning = true;
 
   if (!document.head.innerHTML.includes('Shopify.theme')) return;
 
@@ -24,7 +26,8 @@ let isRunning = false;
     if (!STORE_NAMES.some(qualifies)) return;
   }
 
-  const base = 'http://localhost/themekitHotReload/';
+  const base = IS_PHP ? 'http://localhost/themekitHotReload/' : 'https://localhost:7438/';
+  const ext = IS_PHP ? '.php' : '';
 
   const getEpoch = () => {
     const time = new Date().getTime();
@@ -76,7 +79,7 @@ let isRunning = false;
   const inter = setInterval(async () => {
     if (isReloading) return;
 
-    const response = await fetch(base + 'updated.php').catch(() => console.log(prefix + 'Connection to the Hot Reload Server failed!'));
+    const response = await fetch(base + 'updated' + ext).catch(() => console.log(prefix + 'Connection to the Hot Reload Server failed!'));
     const text = await response.text();
     const lastUpdated = parseInt(text);
 
@@ -84,7 +87,7 @@ let isRunning = false;
       createBanner();
       clearInterval(inter);
       isReloading = true;
-      fetch(base + 'notify.php').catch(() => console.log(prefix + 'Connection to the Hot Reload server failed!'));;
+      fetch(base + 'notify' + ext).catch(() => console.log(prefix + 'Connection to the Hot Reload server failed!'));;
       setTimeout(() => {
         console.clear();
         location.reload();
