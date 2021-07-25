@@ -39,7 +39,7 @@ Use whichever server you feel comfortable with. The Flask and Express servers ar
 `npm i express`
 
 2. Download the `server-express` ([link](https://github.com/benfaerber/themekitHotReload/tree/main/server-express)) folder and place it anywhere that is convient
-3. Navigate to the directory and run `npm init`
+3. Navigate to the directory and run `npm install`
 4. Run the server with `npm start` or `node server.js`
 
 #
