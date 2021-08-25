@@ -1,0 +1,21 @@
+{
+
+  "manifest_version": 2,
+  "name": "Theme Kit Hot Reload",
+  "version": "1.0",
+
+  "description": "Adds hot reload to Shopify Theme Kit. Everytime a theme file is changed the browser window is automatically reloaded.",
+
+  "icons": {
+    "48": "icons/icon_48.png",
+    "96": "icons/icon_96.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["hotreload_client.js"]
+    }
+  ]
+
+}

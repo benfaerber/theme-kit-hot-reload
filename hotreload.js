@@ -1,24 +1,21 @@
-let _isHotReloadRunning = false;
 
 (() => {
-  const IS_PHP = false;
-
+  const IS_TIME_AMERICAN = true;
   const STORE_NAMES = [];
 
-  const prefix = 'Theme Kit Hot Reload: ';
-  if (_isHotReloadRunning) return;
-  _isHotReloadRunning = true;
+  let isTabVisible = true;
+  let isReloading = false;
 
-  if (!document.head.innerHTML.includes('Shopify.theme')) return;
+  const prefix = 'Theme Kit Hot Reload: ';
+  const base = 'http://localhost:7438/';
+
+  if (!document.head.innerHTML.includes('Shopify.theme') || !document.body.innerHTML.includes('preview-bar-iframe')) return;
 
   if (STORE_NAMES && STORE_NAMES.length !== 0) {
     const url = location.href;
     const qualifies = (u) => url.startsWith(u) && !url.includes('preview_bar');
     if (!STORE_NAMES.some(qualifies)) return;
   }
-
-  const base = IS_PHP ? 'http://localhost/themekitHotReload/' : 'http://localhost:7438/';
-  const ext = IS_PHP ? '.php' : '';
 
   const getEpoch = () => {
     const time = new Date().getTime();
@@ -28,10 +25,18 @@ let _isHotReloadRunning = false;
 
   const createBanner = () => {
     const d = new Date();
-    const stamp = [d.getHours(), d.getMinutes(), d.getSeconds()].map(d => {
-      d = d.toString();
-      return d.length === 1 ? '0' + d : d;
-    }).join(':');
+
+    let hours = d.getHours();
+    let post = ''
+    if (IS_TIME_AMERICAN) {
+      const isPM = hours > 12;
+      post = ' ' + (isPM ? 'PM' : 'AM');
+      hours = isPM ? hours - 12 : hours;
+    }
+
+    const pad = d => (d < 10 ? '0' + d.toString() : d.toString());
+
+    const stamp = [hours, pad(d.getMinutes()), pad(d.getSeconds())].join(':') + post;
 
     const elem = document.createElement('div');
     elem.className = 'reloadBanner';
@@ -64,30 +69,35 @@ let _isHotReloadRunning = false;
       }
       document.querySelector('.reloadNumber').innerHTML = secs.toString();
     }, 1000);
+  };
+
+  const delayedReload = () => {
+    setTimeout(() => {
+      console.clear();
+      location.reload();
+    }, 5000);
   }
+
+  window.addEventListener('visibilitychange', () => isTabVisible = !isTabVisible);
 
   const lastReloaded = getEpoch();
 
-  let isReloading = false;
-
   const inter = setInterval(async () => {
-    if (isReloading) return;
+    if (isReloading || !isTabVisible) return;
 
-    const response = await fetch(base + 'updated' + ext).catch(() => console.log(prefix + 'Connection to the Hot Reload Server failed!'));
+    const response = await fetch(base + 'updated').catch(() => console.log(prefix + 'Connection to the Hot Reload Server failed! (endpoint: /updated)'));
     const text = await response.text();
     const lastUpdated = parseInt(text);
 
     if (lastUpdated > lastReloaded) {
+      isReloading = true;
+
       createBanner();
       clearInterval(inter);
-      isReloading = true;
-      fetch(base + 'notify' + ext).catch(() => console.log(prefix + 'Connection to the Hot Reload server failed!'));;
-      setTimeout(() => {
-        console.clear();
-        location.reload();
-      }, 5000);
+      fetch(base + 'notify').catch(() => console.log(prefix + 'Connection to the Hot Reload server failed! (endpoint: /notify)'));;
+      delayedReload();
     }
 
-  }, 1000);
+  }, 500);
 
 })();
